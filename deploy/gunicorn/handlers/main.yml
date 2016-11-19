@@ -1,0 +1,4 @@
+---
+- name: Restart gunicorn
+  sudo: yes
+  service: name=gunicorn state=restarted

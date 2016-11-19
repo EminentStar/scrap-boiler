@@ -1,0 +1,8 @@
+---
+- name: Install gunicorn 
+  apt: pkg=gunicorn state=installed update_cache=true 
+  become: true
+  become_user: root
+  register: gunicorninstalled
+  notify: 
+    - Restart gunicorn  

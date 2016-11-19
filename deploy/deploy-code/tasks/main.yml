@@ -1,0 +1,33 @@
+---
+- name: Copy ssh-key
+  copy: src=rsa_key/ 
+        dest=/home/vagrant/.ssh 
+        owner=vagrant 
+        group=vagrant 
+  register: copysshkey
+
+- name: chmod private key
+  shell: chmod 600 ~/.ssh/bb_id_rsa
+
+- name: Deploy Code
+  git: repo=git@bitbucket.org:soma2016_scrap/junkyu_scrap.git 
+       dest=/home/vagrant/junkyu_scrap 
+       update=yes 
+       key_file=/home/vagrant/.ssh/bb_id_rsa
+       accept_hostkey=yes
+       remote={{repo_remote}}
+       version={{repo_version}}
+  register: deploycode
+
+- name: Install pip requirements of the project
+  become: true
+  become_user: root
+  shell: pip3 install -r /home/vagrant/junkyu_scrap/requirements.txt
+ 
+- name: copy gunicorn config
+  become: true
+  become_user: root
+  template: src=gunicorn.j2 dest=/etc/init/gunicorn.conf
+  notify: 
+    - Restart gunicorn
+

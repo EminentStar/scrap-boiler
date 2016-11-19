@@ -1,0 +1,38 @@
+---
+- name: Install Git-Dependencies
+  apt: name={{item}} state=installed update_cache=true
+  with_items:
+       - build-essential
+       - libssl-dev
+       - libcurl4-gnutls-dev
+       - libexpat1-dev
+       - gettext
+       - unzip
+  become: true
+  become_user: root
+  register: installgitdepends
+
+- name: Install Git
+  when: installgitdepends|success
+  become: true
+  become_user: root
+  apt: pkg=git state=installed update_cache=true
+  register: installgit
+
+- name: Set Git User Config 
+  when: installgit|success
+  shell: "{{item}}"
+  with_items:
+    - git config --global user.name "junk3843"
+    - git config --global user.email "junk3843@naver.com"
+  register: setgituserconfig 
+
+- name: Install python3-pip
+  apt: pkg=python3-pip
+  become: true
+  become_user: root
+
+- name: Upgrade pip3
+  shell: pip3 install -U pip
+
+
