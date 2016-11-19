@@ -1,0 +1,4 @@
+---
+- name: start
+  sudo: yes
+  service: name=influxdb state=restarted

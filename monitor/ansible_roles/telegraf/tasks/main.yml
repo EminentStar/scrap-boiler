@@ -1,0 +1,18 @@
+---
+- name: Download telegraf.deb
+  shell: wget https://dl.influxdata.com/telegraf/releases/telegraf_1.1.0_amd64.deb
+ 
+- name: dpkg telegraf.deb
+  become: true
+  become_user: root
+  shell: dpkg -i telegraf_1.1.0_amd64.deb
+
+- name: Copy telegraf.conf
+  become: true
+  become_user: root
+  template: src=telegraf.conf.j2 dest=/etc/telegraf/influxdb.conf owner=root group=root
+
+- name: Restart telegraf
+  become: true
+  become_user: root
+  service: name=telegraf state=restarted

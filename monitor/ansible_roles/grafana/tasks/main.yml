@@ -1,0 +1,27 @@
+---
+- name: Download grafana.deb
+  become: true
+  become_user: root
+  shell: wget https://grafanarel.s3.amazonaws.com/builds/grafana_4.0.0-1478693311beta1_amd64.deb
+
+
+- name: install adduser libfontconfig
+  become: true
+  become_user: root
+  apt: name={{item}} state=installed update_cache=true
+  with_items:
+       - adduser
+       - libfontconfig
+
+
+- name: dpkg grafana.deb
+  become: true
+  become_user: root
+  shell: dpkg -i grafana_4.0.0-1478693311beta1_amd64.deb
+
+ 
+- name: Restart grafana-server
+  become: true
+  become_user: root
+  service: name=grafana-server state=restarted
+

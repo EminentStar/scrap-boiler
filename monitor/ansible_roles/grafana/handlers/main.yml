@@ -1,0 +1,4 @@
+---
+- name: Restart Grafana
+  sudo: yes
+  service: name=grafana-server state=restarted
