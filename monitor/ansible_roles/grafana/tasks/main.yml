@@ -2,8 +2,10 @@
 - name: Download grafana.deb
   become: true
   become_user: root
-  shell: wget https://grafanarel.s3.amazonaws.com/builds/grafana_4.0.0-1478693311beta1_amd64.deb
-
+  get_url:
+    url: https://grafanarel.s3.amazonaws.com/builds/grafana_4.0.0-1478693311beta1_amd64.deb
+    dest: /home/ubuntu/grafana_4.0.0-1478693311beta1_amd64.deb
+    mode: 0644
 
 - name: install adduser libfontconfig
   become: true
@@ -25,3 +27,9 @@
   become_user: root
   service: name=grafana-server state=restarted
 
+- name: Copy shellscript for creating datasource
+  template: src=create_datasource.sh.j2 dest=/home/ubuntu/create_datasource.sh
+
+
+- name: Create Influxdb Datasource
+  shell: sh create_datasource.sh
