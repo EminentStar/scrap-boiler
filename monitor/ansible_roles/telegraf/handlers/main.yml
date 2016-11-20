@@ -1,4 +1,5 @@
 ---
 - name: Restart Telegraf
-  sudo: yes
+  become: true
+  become_user: root
   service: name=telegraf state=restarted
