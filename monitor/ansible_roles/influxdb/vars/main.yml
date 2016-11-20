@@ -1,4 +1,3 @@
 ---
-metadata_dir: /tmp/influxdb_data/meta
-
+metadata_dir: /var/lib/influxdb/meta
 

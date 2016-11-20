@@ -1,4 +1,5 @@
 ---
-- name: start
-  sudo: yes
-  service: name=influxdb state=restarted
+- name: Restart Influxdb 
+  become: true
+  become_user: root
+  action: service name=influxdb state=restarted
