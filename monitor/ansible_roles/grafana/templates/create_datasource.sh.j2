@@ -1,0 +1,13 @@
+host={{influxdb_host}}:3000
+dsName={{datasourceName}}
+dbName={{databaseName}}
+url="http://localhost:8086"
+user={{influxdbUser}}
+password={{influxdbPassword}}
+
+
+curl -i -H "Content-Type: application/json" \
+ -H "Accept: application/json" \
+ -d "{ \"name\":\"$dsName\", \"type\":\"influxdb\", \"url\":\"$url\",\"access\":\"proxy\",\"basicAuth\":false, \"database\":\"$dbName\", \"user\":\"$user\", \"password\":\"$password\", \"isDefault\":true}" \
+ -X POST \
+ http://admin:admin@$host/api/datasources

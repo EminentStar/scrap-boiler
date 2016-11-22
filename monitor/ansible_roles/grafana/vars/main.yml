@@ -1,0 +1,5 @@
+---
+datasourceName: "InfluxDB_telegraf"
+databaseName: "telegraf"
+influxdbUser: "admin"
+influxdbPassword: "0000"

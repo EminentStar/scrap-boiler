@@ -1,0 +1,5 @@
+---
+- name: Restart Grafana
+  become: true
+  become_user: root
+  service: name=grafana-server state=restarted

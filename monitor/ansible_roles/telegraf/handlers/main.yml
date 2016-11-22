@@ -1,0 +1,5 @@
+---
+- name: Restart Telegraf
+  become: true
+  become_user: root
+  service: name=telegraf state=restarted

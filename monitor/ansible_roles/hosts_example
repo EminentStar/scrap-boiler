@@ -1,0 +1,15 @@
+[monitoring]
+52.78.109.34 serverTag=MONITORING
+
+[api]
+52.78.207.33 serverTag=API
+
+[mysql]
+XXX.XXX.XXX.XXX serverTag=DB
+
+[redis]
+XXX.XXX.XXX.XXX serverTag=CACHE
+
+[local]
+127.0.0.1
+

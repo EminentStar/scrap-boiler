@@ -1,0 +1,5 @@
+---
+influxdb_url: http://{{ influxdb_host }}:8086
+influxdb_dbname: telegraf
+mysql_host: telegraf:0000@tcp(127.0.0.1:3306)/
+nginx_access_log_location: /tmp/access.log

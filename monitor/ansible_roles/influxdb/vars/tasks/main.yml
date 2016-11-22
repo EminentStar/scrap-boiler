@@ -1,0 +1,30 @@
+---
+- name: InfluxData Repository Configuration 1
+  shell: curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+
+- name: InfluxData Repository Configuration 2 
+  shell: echo "deb https://repos.influxdata.com/ubuntu trusty stable"
+
+- name: InfluxData Repository Configuration 3
+  become: true
+  become_user: root
+  shell: tee /etc/apt/sources.list.d/influxdb.list
+ 
+- name: Install InfluxDB 
+  become: true
+  become_user: root
+  apt: pkg=influxdb state=installed update_cache=true
+
+- name: Copy influxdb.conf 
+  become: true
+  become_user: root
+  template: src=influxdb.conf.j2 dest=/etc/influxdb/influxdb.conf owner=root group=root
+
+- name: Restart Influxdb
+  become: true
+  become_user: root
+  service: name=influxdb state=restarted
+
+- name: Create influxdb user
+  shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD '0000' WITH ALL PRIVILEGES"
+

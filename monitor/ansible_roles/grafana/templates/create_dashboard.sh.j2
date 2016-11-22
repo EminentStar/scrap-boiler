@@ -1,0 +1,16 @@
+host=$1
+hostname=$2
+tag=$3
+
+if [ $tag = 'API' ]
+then
+        sh create_dashboard_api.sh $host $hostname $tag
+elif [ $tag = 'CACHE' ]
+then
+        sh create_dashboard_cache.sh $host $hostname $tag
+elif [ $tag = 'DB' ]
+then
+        sh create_dashboard_db.sh $host $hostname $tag
+else
+	echo "ERROR"
+fi
