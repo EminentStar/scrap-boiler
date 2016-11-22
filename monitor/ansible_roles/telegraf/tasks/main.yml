@@ -34,12 +34,3 @@
   become_user: root
   service: name=telegraf state=restarted
 
-- name: Get hostname
-  shell: hostname
-  register: hostname
-
-- name: Make a shell script for creating a grafana dashboard (Individual)
-  template: src=create_dashboard_per_server.sh.j2 dest=/home/ubuntu/create_dashboard_per_server.sh owner=ubuntu group=ubuntu
-
-- name: Run shell script creating dashboard
-  shell: sh create_dashboard_per_server.sh {{hostname.stdout}}

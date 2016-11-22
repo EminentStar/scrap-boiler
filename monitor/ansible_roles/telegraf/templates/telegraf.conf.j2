@@ -259,3 +259,30 @@
 [[inputs.system]]
   # no configuration
 
+
+# Read metrics from one or many redis servers
+[[inputs.redis]]
+  ## specify servers via a url matching:
+  ##  [protocol://][:password]@address[:port]
+  ##  e.g.
+  ##    tcp://localhost:6379
+  ##    tcp://:password@192.168.99.100
+  ##    unix:///var/run/redis.sock
+  ##
+  ## If no servers are specified, then localhost is used as the host.
+  ## If no port is specified, 6379 is used
+  servers = ["tcp://localhost:6379"]
+
+
+[[inputs.logparser]]
+  ## files to tail.
+  files = ["{{ nginx_access_log_location }}"]
+  ## Read file from beginning.
+  from_beginning = true
+  ## Override the default measurement name, which would be "logparser_grok"
+  name_override = "nginx_access_log"
+  ## For parsing logstash-style "grok" patterns:
+  [inputs.logparser.grok]
+    patterns = ["%{COMMON_LOG_FORMAT}"]
+
+
