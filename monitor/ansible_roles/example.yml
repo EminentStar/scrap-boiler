@@ -1,0 +1,18 @@
+---
+- hosts: monitoring 
+  roles:
+    - influxdb
+    - grafana
+
+- hosts: api
+  roles:
+    - telegraf
+
+- hosts: cache
+  roles:
+    - telegraf
+
+- hosts: db
+  roles:
+    - telegraf
+

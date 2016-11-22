@@ -1,0 +1,9 @@
+[monitoring]
+52.78.240.186 serverTag=MONITORING ipAddr=52.78.240.186
+
+[api]
+52.78.27.53 serverTag=API ipAddr=52.78.27.53
+
+[cache]
+52.78.228.134 serverTag=CACHE ipAddr=52.78.228.134
+
