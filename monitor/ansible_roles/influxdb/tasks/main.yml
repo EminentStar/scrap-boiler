@@ -3,13 +3,8 @@
   shell: curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 
 - name: InfluxData Repository Configuration 2 
-  shell: echo "deb https://repos.influxdata.com/ubuntu trusty stable"
+  shell: echo "deb https://repos.influxdata.com/ubuntu trusty stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
 
-- name: InfluxData Repository Configuration 3
-  become: true
-  become_user: root
-  shell: tee /etc/apt/sources.list.d/influxdb.list
- 
 - name: Install InfluxDB 
   become: true
   become_user: root
