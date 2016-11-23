@@ -1,7 +1,0 @@
----
-repo_url: https://junk3843@bitbucket.org/soma2016_scrap/junkyu_scrap.git
-app_name: junkyu_scrap 
-webapps_dir: /home/vagrant/simple_scrap 
-repo_remote: origin
-repo_version: master
-
