@@ -34,3 +34,21 @@
   become_user: root
   service: name=telegraf state=restarted
 
+- name: Copy shellscript for creating datasource (1)
+  template: src=create_dashboard.sh.j2 dest=/home/ubuntu/create_dashboard.sh
+
+- name: Copy shellscript for creating datasource (2)
+  template: src=create_dashboard_api.sh.j2 dest=/home/ubuntu/create_dashboard_api.sh
+
+- name: Copy shellscript for creating datasource (3)
+  template: src=create_dashboard_db.sh.j2 dest=/home/ubuntu/create_dashboard_db.sh
+
+- name: Copy shellscript for creating datasource (4)
+  template: src=create_dashboard_cache.sh.j2 dest=/home/ubuntu/create_dashboard_cache.sh
+
+- name: Get hostname
+  shell: hostname
+  register: hostname
+
+- name: Create Dashboard
+  shell: sh create_dashboard.sh {{ipAddr}} {{hostname.stdout}} {{serverTag}}
