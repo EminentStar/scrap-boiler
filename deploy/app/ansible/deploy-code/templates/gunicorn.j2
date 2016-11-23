@@ -1,0 +1,12 @@
+description "Gunicorn application server handling scrap"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+setuid ubuntu
+setgid www-data
+chdir /home/ubuntu/scrap
+
+#exec gunicorn —workers 3 —bind 0.0.0.0:8000 mysite.wsgi:application
+exec gunicorn --workers 3 --bind unix:/home/ubuntu/scrap/mysite.sock scrapping.wsgi:

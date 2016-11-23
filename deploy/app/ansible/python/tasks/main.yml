@@ -1,0 +1,33 @@
+---
+- name: Install Git-Dependencies
+  apt: name={{item}} state=installed update_cache=true
+  with_items:
+       - build-essential
+       - libssl-dev
+       - libcurl4-gnutls-dev
+       - libexpat1-dev
+       - gettext
+       - unzip
+  become: true
+  become_user: root
+  register: installgitdepends
+
+- name: Install Git
+  when: installgitdepends|success
+  become: true
+  become_user: root
+  apt: pkg=git state=installed update_cache=true
+  register: installgit
+
+- name: Install python-pip
+  apt: pkg=python-pip
+  become: true
+  become_user: root
+
+- name: Upgrade pip
+  shell: pip install -U pip
+
+- name: install python-mysqldb
+  apt: pkg=python-mysqldb state=installed update_cache=true
+
+

@@ -1,0 +1,12 @@
+server{
+        listen 80;
+        server_name {{ domain }};
+
+        location /static {
+                alias /home/ubuntu/static;
+        }
+        location / {
+                proxy_pass http://unix:/home/ubuntu/scrap/mysite.sock;
+                #proxy_pass http://localhost:8000;
+        }
+}

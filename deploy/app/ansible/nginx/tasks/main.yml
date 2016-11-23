@@ -1,0 +1,50 @@
+---
+- name: Add Nginx Repository
+  apt_repository: repo='ppa:nginx/stable' state=present
+  register: ppastable
+
+- name: Install Nginx
+  when: ppastable|success
+  become: true
+  become_user: root
+  apt: pkg=nginx state=installed update_cache=true
+  register: nginxinstalled
+  notify:
+    - Start Nginx
+
+- name: Disable Default Site
+  when: nginxinstalled|success
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Add SFH Site Config
+  when: nginxinstalled|success
+  register: sfhconfig
+  template: src=nginx/templates/ec2.eminentstar.xyz.j2 dest=/etc/nginx/sites-available/{{ domain }}.conf owner=root group=root
+
+#- name: Add nginx Config
+#  when: nginxinstalled|success
+#  register: nginxconfig
+#  template: src=nginx/templates/nginx.conf dest=/etc/nginx/nginx.conf owner=root group=root
+
+- name: Enable SFH Site Config
+  when: sfhconfig|success
+  file: src=/etc/nginx/sites-available/{{ domain }}.conf dest=/etc/nginx/sites-enabled/{{ domain}}.conf state=link
+
+- name: Create Web root
+  when: nginxinstalled|success
+  file: dest=/var/www/{{ domain }}/public mode=775 state=directory owner=www-data group=www-data
+  notify:
+    - Reload Nginx
+
+- name: Web Root Permissions
+  when: nginxinstalled|success
+  file: dest=/var/www/{{ domain }} mode=775 state=directory owner=www-data group=www-data recurse=yes
+  notify:
+    - Reload Nginx
+
+- name: Change permission
+  become: true
+  become_user: root
+  shell: chown ubuntu:ubuntu /var/log/nginx/access.log
+
+

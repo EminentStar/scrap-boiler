@@ -1,0 +1,9 @@
+---
+repo_url: <%= gitAddress %>
+app_name: scrap
+webapps_dir: /home/vagrant/scrap
+repo_remote: origin
+repo_version: master
+gitusername: <%= gitUsername %>
+gitpassword: <%= gitPassword %>
+

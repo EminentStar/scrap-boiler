@@ -1,0 +1,24 @@
+---
+- hosts: monitoring
+  roles:
+  - influxdb  
+  - grafana  
+
+- hosts: db-master
+  roles:
+   - { role: mysql, mysql_dbye: [{name: soma}], mysql_users: [{name: soma, pass: foobar, priv: "*.*:ALL"}], mysql_db_id: 8 }
+   - telegraf
+
+- hosts: cache-servers
+  roles:
+  - redis
+  - telegraf
+
+
+- hosts: api-servers
+  roles: 
+  - nginx  
+  - gunicorn  
+  - python  
+  - telegraf  
+  - deploy-code

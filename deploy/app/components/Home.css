@@ -1,0 +1,129 @@
+.container1 {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+}
+
+.container2 {
+  position: absolute;
+  width: 500px;
+  top: 300px;
+  left: 10px;
+}
+
+.container3 {
+  position: absolute;
+  width: 600px;
+  top: 550px;
+  left: 10px;
+}
+
+.container4 {
+  position: absolute;
+  width: 600px;
+  top: 770px;
+  left: 10px;
+}
+
+.container5 {
+  position: absolute;
+  width: 600px;
+  top: 1000px;
+  left: 10px;
+  margin-bottom: 50px;
+}
+
+.container h2 {
+  font-size: 5rem;
+}
+
+.container a {
+  font-size: 1.4rem;
+}
+
+.gradient_line {
+  position: fixed;;
+  left: 0px;
+  top: 0px;
+  width: 5px;
+  height: 100%;
+  background: #ff6d92 radial-gradient(circle at center, #f5b200 0, #fc636b 30%, #ff6d92 70%);
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.sub_title {
+  font-size: 20px;
+  margin: 30px 0 30px 20px;
+}
+
+.checkbox_wrapper {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.form {
+  position: relative;
+  width: 100%;
+  display: block;
+  height: 50px;
+}
+
+.form_label {
+  font-size: 14px;
+  position: absolute;
+  color: rgb(103, 109, 118);
+  margin: 10px 10px 10px 20px;
+}
+
+.form_content {
+  position: absolute;
+  top: 10px;
+  left: 135px;
+}
+
+.form_content input {
+  border: 0px;
+  font-size: 14px;
+  border-bottom: 1px solid #EEE
+}
+.form_content input:focus {
+  outline: unset;
+}
+
+
+.form_content:focus {
+  outline: unset;
+  border-bottm: 1px solid #ff6d92 radial-gradient(circle at center, #f5b200 0, #fc636b 30%, #ff6d92 70%);
+}
+
+.ansible_run {
+  float: right;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  color: white;
+  display: block;
+  width: 50px;
+  height: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgb(106, 103, 206);
+}
+
+.ansible_run:hover {
+  cursor: pointer;
+  font-size: 13px;
+  background: rgb(113, 105, 212);
+}
+
+.keyFileInput {
+  margin-left:2px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 0px;
+}

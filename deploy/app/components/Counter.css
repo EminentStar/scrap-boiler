@@ -1,0 +1,62 @@
+.backButton {
+  position: absolute;
+}
+
+.counter {
+  position: absolute;
+  top: 30%;
+  left: 45%;
+  font-size: 10rem;
+  font-weight: bold;
+  letter-spacing: -.025em;
+}
+
+.btnGroup {
+  position: relative;
+  top: 500px;
+  width: 480px;
+  margin: 0 auto;
+}
+
+.btn {
+  font-size: 1.6rem;
+  font-weight: bold;
+  background-color: #fff;
+  border-radius: 50%;
+  margin: 10px;
+  width: 100px;
+  height: 100px;
+  opacity: .7;
+  cursor: pointer;
+  font-family: Arial, Helvetica, Helvetica Neue;
+}
+
+.btn:hover {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.gradient_line {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 5px;
+  height: 100%;
+  background: #ff6d92 radial-gradient(circle at center, #f5b200 0, #fc636b 30%, #ff6d92 70%);
+}
+
+.terminal{
+  width: 1000px;
+  height: 400px;
+  display: block;
+  margin : 20px;
+}
+
+.terminal_row{
+  margin: 20px 0px;
+  display: block;
+  width: auto;
+  height: auto;
+  font-color: black;
+  font-size :12px;
+}

@@ -1,0 +1,19 @@
+[api-servers]<% for(var i = 0; i < apiServerAddresses.length; i++ ) { %>
+<%= apiServerAddresses[i] -%> serverTag=API ipAddr=<%= apiServerAddresses[i] -%>
+<% } %>
+
+[db-master]
+<%= masterAddress %> serverTag=DB ipAddr=<%= masterAddress -%>
+
+[cache-servers]<% for(var i = 0; i < cacheServerAddresses.length; i++ ) { %>
+<%= cacheServerAddresses[i] -%> serverTag=CACHE ipAddr=<%= cacheServerAddresses[i] -%>
+<% } %>
+
+
+[db-slave]
+<%= slaveAddress %> serverTag=DB ipAddr=<%= slaveAddress -%>
+
+[monitoring]
+<%= monitoringAddress %> serverTag=MONITORING ipAddr=<%= monitoringAddress -%>
+
+

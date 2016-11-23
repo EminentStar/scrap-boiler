@@ -1,0 +1,9 @@
+---
+repo_url: bitbucket.org/soma2016_scrap/scrap.git
+app_name: scrap
+webapps_dir: /home/vagrant/scrap
+repo_remote: origin
+repo_version: master
+gitusername: clsrn1581
+gitpassword: dbs3121581
+

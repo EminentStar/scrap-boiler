@@ -1,0 +1,57 @@
+---
+- name: Install Dependencies for Downloading telegraf.deb (1)
+  become: true
+  become_user: root
+  apt: name=python-pip state=installed update_cache=true
+
+- name: pip Install Dependencies for Downloading telegraf.deb (2)
+  become: true
+  become_user: root
+  pip: name={{item}}
+  with_items:
+    - urllib3
+    - pyopenssl
+    - ndg-httpsclient
+    - pyasn1
+
+- name: Download telegraf.deb
+  become: true
+  become_user: root
+  shell: wget https://dl.influxdata.com/telegraf/releases/telegraf_1.1.0_amd64.deb
+
+- name: dpkg telegraf.deb
+  become: true
+  become_user: root
+  shell: dpkg -i telegraf_1.1.0_amd64.deb
+
+- name: Copy telegraf.conf
+  become: true
+  become_user: root
+  template: src=telegraf.conf.j2 dest=/etc/telegraf/telegraf.conf owner=root group=root
+
+- name: Restart telegraf
+  become: true
+  become_user: root
+  service: name=telegraf state=restarted
+
+- name: Copy shellscript for creating datasource (1)
+  template: src=create_dashboard.sh.j2 dest=/home/ubuntu/create_dashboard.sh
+
+- name: Copy shellscript for creating datasource (2)
+  template: src=create_dashboard_api.sh.j2 dest=/home/ubuntu/create_dashboard_api.sh
+
+- name: Copy shellscript for creating datasource (3)
+  template: src=create_dashboard_db.sh.j2 dest=/home/ubuntu/create_dashboard_db.sh
+
+- name: Copy shellscript for creating datasource (4)
+  template: src=create_dashboard_cache.sh.j2 dest=/home/ubuntu/create_dashboard_cache.sh
+
+- name: Get hostname
+  shell: hostname
+  register: hostname
+
+- name: Create Dashboard
+  shell: sh create_dashboard.sh {{ipAddr}} {{hostname.stdout}} {{serverTag}}
+  register: createdb
+
+- debug: var=createdb

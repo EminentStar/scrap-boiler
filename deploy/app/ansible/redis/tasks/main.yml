@@ -1,0 +1,10 @@
+---
+- name: Installs redis-server
+  apt: pkg=redis-server state=installed update_cache=true
+  notify:
+      - start redis
+
+- name: copy redis.config
+  become: true
+  become_user: root
+  template: src=redis.conf dest=/etc/redis/redis.conf

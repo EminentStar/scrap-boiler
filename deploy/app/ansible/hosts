@@ -1,0 +1,16 @@
+[api-servers]
+52.78.242.61 serverTag=API ipAddr=52.78.242.61
+52.78.235.202 serverTag=API ipAddr=52.78.235.202
+
+[db-master]
+52.78.240.123 serverTag=DB ipAddr=52.78.240.123
+[cache-servers]
+52.78.196.76 serverTag=CACHE ipAddr=52.78.196.76
+52.78.152.149 serverTag=CACHE ipAddr=52.78.152.149
+
+
+[db-slave]
+52.78.195.92 serverTag=DB ipAddr=52.78.195.92
+[monitoring]
+52.78.92.247 serverTag=MONITORING ipAddr=52.78.92.247
+

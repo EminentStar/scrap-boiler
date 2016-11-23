@@ -1,0 +1,36 @@
+---
+- name: Remove before directory
+  become: true
+  become_user: root
+  shell: rm -rf /home/ubuntu/{{ app_name }}
+
+- name: Deploy Code
+  git: repo=https://{{ gitusername }}:{{ gitpassword }}@{{ repo_url }}
+       dest=/home/ubuntu/{{ app_name }}
+       update=yes
+       accept_hostkey=yes
+       remote={{repo_remote}}
+       version={{repo_version}}
+  register: deploycode
+
+- name: Install pip requirements of the project
+  become: true
+  become_user: root
+  shell: pip install -r /home/ubuntu/{{ app_name }}/requirements.txt
+
+#- name: Go to the scrape directory and run gunicorn
+#  become_user: root
+#  command: chdir=/home/ubuntu/scrap gunicorn --workers 3 --bind unix:/home/ubuntu/scrap/mysite.sock mysite.wsgi
+
+- name: copy gunicorn config
+  become: true
+  become_user: root
+  template: src=gunicorn.j2 dest=/etc/init/gunicorn.conf
+  notify:
+    - Restart gunicorn
+
+- name: copy info.config
+  become: true
+  become_user: ubuntu
+  template: src=info.conf dest=/home/ubuntu/info.conf
+

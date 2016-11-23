@@ -1,0 +1,5 @@
+---
+- name: Restart Influxdb 
+  become: true
+  become_user: root
+  action: service name=influxdb state=restarted
