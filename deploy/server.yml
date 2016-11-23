@@ -1,0 +1,8 @@
+
+- hosts: db-master
+  roles:
+   - { role: mysql, mysql_db: [{name: soma}], mysql_users: [{name: soma, pass: foobar, priv: "*.*:ALL"}], mysql_db_id: 8 }
+
+- hosts: db-slave
+  roles:
+   - {role: mysql, mysql_db: [{name: soma}], mysql_users: [{name: soma, pass: foobar, priv: "*.*:ALL"}], mysql_repl_role: slave, mysql_repl_master: 52.78.234.117, mysql_db_id: 9, mysql_repl_user: [{name: repl, pass: foobar}]}

@@ -1,0 +1,58 @@
+---
+- name: Install Preparation of MySQL-python
+  become: true
+  become_user: root
+  apt: name={{item}} state=installed update_cache=yes
+  with_items: 
+    - libmariadbclient-dev
+    - python-dev
+    - libssl-dev
+
+- name: Preparation installing MariaDB
+  become: true
+  become_user: root
+  shell: "{{item}}"
+  with_items:
+    - apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+    - add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
+
+- name: Install MariaDB Server
+  become: true
+  become_user: root
+  apt: name=mariadb-server update_cache=yes state=latest
+
+- name: Install python-pip
+  become: true
+  become_user: root
+  apt: name=python-pip state=latest
+
+- name: Install MySQL-python
+  become: true
+  become_user: root
+  pip: name=MySQL-python
+
+- name: Copy my.cnf
+  become: true
+  become_user: root
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf owner=root group=root
+  notify:
+    - Restart mysql
+
+- name: Open mysql port
+  become: true
+  become_user: root
+  shell: "{{item}}"
+  with_items:
+    - ufw enable
+    - ufw allow mysql
+
+- name: Copy db dump
+  copy: src=db.sql dest=/tmp owner=vagrant group=vagrant
+  register: copydbdump
+
+- name: Import db dump
+  when: copydbdump|success
+  become: true
+  become_user: root
+  mysql_db: state=import name=all target=/tmp/db.sql
+

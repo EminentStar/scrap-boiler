@@ -1,0 +1,11 @@
+description "Gunicorn application server handling junkyu_scrap"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+setuid vagrant 
+setgid www-data
+chdir /home/vagrant/junkyu_scrap
+
+exec /usr/bin/gunicorn --workers 3 --bind unix:/home/vagrant/junkyu_scrap/mysite.sock mysite.wsgi:application
