@@ -56,6 +56,7 @@ def scrap(request):
         global block_redis_list
         global kvlist
         global replica
+        current_host_name = ''
         redis_context = {}
         exist_context = {}
         url = urllib.quote(request.GET.get('url', ''))
@@ -78,6 +79,7 @@ def scrap(request):
         # db error handling
         try:
             v = ch.get(decode_url)
+            current_host_name = v[2]
             print 'v[0] = ', v[0]
             print 'v[1] = ', v[1]
             print 'v[2] = ', v[2]
@@ -99,17 +101,23 @@ def scrap(request):
                     pass
             
         except:
-            print ' line 73 unexpected error.', sys.exc_info()
             print ' redis connection rebuilding...'
-            hostname = v[2]
-            index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-            index = map(str, index_list)
-            index = ''.join(index)
-            index = int(index)
-           
-            block_redis = kvlist.pop(index)
-            block_redis_list.append(block_redis)
-            ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            try:
+                print v[0]
+                hostname = current_host_name
+                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
+                index = map(str, index_list)
+                index = ''.join(index)
+                index = int(index)
+              
+                if not kvlist: # if kvlist empty
+                    pass
+                else:
+                    block_redis = kvlist.pop(index)
+                    block_redis_list.append(block_redis)
+                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            except:
+                print 'not exist available redis cache server'
 
         # check mysql database
         try:
@@ -155,6 +163,7 @@ def scrap(request):
           
             arg = "SUCCESS: " + decode_url
             logger.error(arg)
+
             return JsonResponse(exist_context, safe=False)
 
         plain_text = r.text
@@ -203,16 +212,24 @@ def scrap(request):
             v[1].set(decode_url, new_context)
             v[1].expire(decode_url, 64800) 
         except:
-            print ' redis connection rebuilding...'
-            hostname = v[2]
-            index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-            index = map(str, index_list)
-            index = ''.join(index)
-            index = int(index)
-           
-            block_redis = kvlist.pop(index)
-            block_redis_list.append(block_redis)
-            ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            print 'redis connection rebuilding...'
+            try:
+                print v[1]
+                hostname = current_host_name
+                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
+                index = map(str, index_list)
+                index = ''.join(index)
+                index = int(index)
+          
+                if not kvlist: # if kvlist empty
+                    pass
+                else:
+                    block_redis = kvlist.pop(index)
+                    block_redis_list.append(block_redis)
+                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            except:
+                print 'not exist available redis cache server'
+  
 
         print 'success save row'
         arg = "SUCCESS: " + decode_url
@@ -231,6 +248,7 @@ def expire(request):
         global kvlist
         global replica
 
+        current_host_name
         url = urllib.quote(request.GET.get('url', ''))
         decode_url = urllib.unquote(url)
         try:
@@ -245,6 +263,7 @@ def expire(request):
         # try redis key expire 
         try:
             v = ch.get(decode_url)
+            current_host_name = v[2]
             print 'v[0] = ', v[0]
             print 'v[1] = ', v[1]
             print 'v[2] = ', v[2]
@@ -267,16 +286,22 @@ def expire(request):
 
         except:
             print 'redis connection rebuilding...'
-            hostname = v[2]
-            index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-            index = map(str, index_list)
-            index = ''.join(index)
-            index = int(index)
+            try:
+                print v[0]
+                hostname = current_host_name
+                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
+                index = map(str, index_list)
+                index = ''.join(index)
+                index = int(index)
         
-            block_redis = kvlist.pop(index)
-            block_redis_list.append(block_redis)
-            ch = consistent_hashing.ConsistentHash(kvlist, replica)
-         
+                if not kvlist:
+                    pass
+                else:
+                    block_redis = kvlist.pop(index)
+                    block_redis_list.append(block_redis)
+                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            except:
+                print 'not exist available redis cache server'  
 
             print 'occur unexpected error when redis key expire', sys.exc_info() 
  

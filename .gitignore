@@ -33,6 +33,9 @@ app/node_modules
 # OSX
 .DS_Store
 
+# python compile file
+*.pyc
+
 # App packaged
 release
 app/main.js
