@@ -49,6 +49,39 @@ fileHandler = logging.FileHandler('/tmp/scrap.log')
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
 
+def check_redis_status():
+    global ch
+    global block_redis_list
+    global kvlist
+    global replica 
+
+    for idx, v in enumerate(kvlist):
+        try:
+            v[1].get('check redis status')
+        except:
+            block_redis = kvlist.pop(idx)
+            block_redis_list.append(block_redis)
+            ch = consistent_hashing.ConsistentHash(kvlist, replica)
+
+    for idx, block in enumerate(block_redis_list):
+        try:
+            print 'try connect to block redis instance'
+            result = block[1].get('test connection')
+            kvlist.append(block)
+            ch = consistent_hashing.ConsistentHash(kvlist, replica)
+            block_redis_list.pop(idx) 
+            print 'connect to revive redis instance'
+        except:
+            pass
+
+    if not kvlist:
+        print 'not exist available redis cache server'
+        return False
+
+
+          
+    return True
+  
 
 def scrap(request):
     if request.method == 'GET':
@@ -56,7 +89,6 @@ def scrap(request):
         global block_redis_list
         global kvlist
         global replica
-        current_host_name = ''
         redis_context = {}
         exist_context = {}
         url = urllib.quote(request.GET.get('url', ''))
@@ -71,51 +103,18 @@ def scrap(request):
 
         status_code = r.status_code
 
-        # priority function > exception handling 
-        # check redis cache
-        # database sharding
-        # db mysql connection
-        # redis connection refused handling
-        # db error handling
-        try:
-            v = ch.get(decode_url)
-            current_host_name = v[2]
-            print 'v[0] = ', v[0]
-            print 'v[1] = ', v[1]
-            print 'v[2] = ', v[2]
-            redis_context = v[1].get(decode_url)
-            if redis_context is None:
-                pass
-            else:
-                print 'hit redis cache'
-                return JsonResponse(redis_context, safe=False)
-            for idx, block in enumerate(block_redis_list):
-                try:
-                    print 'try connect to block redis instance'
-                    result = block[1].get('test connection')
-                    kvlist.append(block)
-                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
-                    block_redis_list.pop(idx) 
-                    print 'connect to revive redis instance'
-                except:
-                    pass
-            
-        except:
-            print ' redis connection rebuilding...'
+        if check_redis_status():
             try:
-                print v[0]
-                hostname = current_host_name
-                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-                index = map(str, index_list)
-                index = ''.join(index)
-                index = int(index)
-              
-                if not kvlist: # if kvlist empty
+                v = ch.get(decode_url)
+                print 'v[0] = ', v[0]
+                print 'v[1] = ', v[1]
+                redis_context = v[1].get(decode_url)
+                if redis_context is None:
                     pass
                 else:
-                    block_redis = kvlist.pop(index)
-                    block_redis_list.append(block_redis)
-                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+                    print 'hit redis cache'
+                    return JsonResponse(redis_context, safe=False)
+            
             except:
                 print 'not exist available redis cache server'
 
@@ -208,25 +207,12 @@ def scrap(request):
                     print 'line 161 unexpected error. ', sys.exc_info()
 
         # set context into redis cache, ttl
-        try:
-            v[1].set(decode_url, new_context)
-            v[1].expire(decode_url, 64800) 
-        except:
-            print 'redis connection rebuilding...'
+
+        if check_redis_status():
             try:
-                print v[1]
-                hostname = current_host_name
-                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-                index = map(str, index_list)
-                index = ''.join(index)
-                index = int(index)
-          
-                if not kvlist: # if kvlist empty
-                    pass
-                else:
-                    block_redis = kvlist.pop(index)
-                    block_redis_list.append(block_redis)
-                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+                v = ch.get(decode_url)
+                v[1].set(decode_url, new_context)
+                v[1].expire(decode_url, 64800) 
             except:
                 print 'not exist available redis cache server'
   
@@ -248,7 +234,6 @@ def expire(request):
         global kvlist
         global replica
 
-        current_host_name
         url = urllib.quote(request.GET.get('url', ''))
         decode_url = urllib.unquote(url)
         try:
@@ -261,50 +246,19 @@ def expire(request):
             return JsonResponse(error_context, safe=False)
 
         # try redis key expire 
-        try:
-            v = ch.get(decode_url)
-            current_host_name = v[2]
-            print 'v[0] = ', v[0]
-            print 'v[1] = ', v[1]
-            print 'v[2] = ', v[2]
+        if check_redis_status():
 
-            if v[1].get(decode_url):
-                v[1].expire(decode_url, 1)
-                print 'expire success'
-            else:
-                print 'key not exist' 
-            for idx, block in enumerate(block_redis_list):
-                try:
-                    print 'try connect to block redis instance'
-                    result = block[1].get('test connection')
-                    kvlist.append(block)
-                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
-                    block_redis_list.pop(idx)
-                    print 'connect to revive redis instance'
-                except:
-                    pass
-
-        except:
-            print 'redis connection rebuilding...'
             try:
-                print v[0]
-                hostname = current_host_name
-                index_list = [x for x, y in enumerate(kvlist) if y[0] == hostname]
-                index = map(str, index_list)
-                index = ''.join(index)
-                index = int(index)
-        
-                if not kvlist:
-                    pass
+                v = ch.get(decode_url)
+                if v[1].get(decode_url):
+                    v[1].expire(decode_url, 1)
+                    print 'expire success'
                 else:
-                    block_redis = kvlist.pop(index)
-                    block_redis_list.append(block_redis)
-                    ch = consistent_hashing.ConsistentHash(kvlist, replica)
+                    print 'key not exist' 
+
             except:
                 print 'not exist available redis cache server'  
 
-            print 'occur unexpected error when redis key expire', sys.exc_info() 
- 
 
         # try mysql row expire
         try:
