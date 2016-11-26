@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 
 from scraping.models import ScrapInformation
 
+from django_replicated.decorators import use_master, use_slave
+
 import consistent_hashing
 import sys
 
@@ -22,6 +24,18 @@ import redis
 import json
 
 import consistent_hashing
+
+
+@use_master
+def master_db_operation():
+    # master database used for all db operations during
+    # execution of the view 
+    pass
+
+@use_slave
+def slave_db_operation():
+    # same with slave connection 
+    pass
 
 # parsing config file
 
