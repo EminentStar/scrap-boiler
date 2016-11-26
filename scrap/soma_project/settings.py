@@ -17,6 +17,7 @@ cfg = ConfigParser.ConfigParser()
 cfg.read("/home/ubuntu/info.conf")
 
 mysql_db = cfg.get('db', 'mysql')
+slave_db = cfg.get('db', 'slave')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -55,6 +56,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_replicated.middleware.ReplicationMiddleware',
 ]
 
 ROOT_URLCONF = 'soma_project.urls'
@@ -89,9 +91,22 @@ DATABASES = {
         'PASSWORD': 'foobar',
         'HOST': mysql_db,
         'PORT': '3306',
-    }
+    },
+    'slave1': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'soma',
+        'USER': 'soma',
+        'PASSWORD': 'foobar',
+        'HOST': slave_db,
+        'PORT': '3306',
+    },
 }
 
+REPLICATED_DATABASE_SLAVES = ['slave1']
+
+DATABASE_ROUTERS = ['django_replicated.router.ReplicationRouter']
+
+REPLICATED_DATABASE_DOWNTIME = 30
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
